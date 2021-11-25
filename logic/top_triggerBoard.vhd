@@ -45,23 +45,24 @@ entity top_triggerBoard is
     SW : in std_logic_vector(3 downto 0);
 
     --- GPIO -------------------------------------------------------------------
-    GPIO_0 : out std_logic_vector(35 downto 0);
+    GPIO_0    : out std_logic_vector(35 downto 0);
 
-    iGND      : in    std_logic_vector(6 downto 0);
-    oGND      : out   std_logic_vector(9 downto 0);
+    iGND      : in  std_logic_vector(6 downto 0);
+    oGND      : out std_logic_vector(9 downto 0);
 
-    iCLK_PP   : in    std_logic;
-    iSE_BUSY  : in    std_logic_vector(5 downto 0);
-    iTRG_LEMO : in    std_logic;
-    iTRG_PP   : in    std_logic;
-    iRST_PP   : in    std_logic;
-    ioGP      : inout std_logic_vector(2 downto 0);
-    oTRIG     : out   std_logic;
-    oBCO_CLK  : out   std_logic;
-    oBCO_RST  : out   std_logic;
-    oMUX_SEL  : out   std_logic;        --!MUX selector: 0->LVDS, 1->FPGA 
-    oI2C_SDA  : out   std_logic;
-    oI2C_SCL  : out   std_logic
+    iCLK_PP   : in  std_logic;
+    iSE_BUSY  : in  std_logic_vector(5 downto 0);
+    iTRG_LEMO : in  std_logic;
+    iTRG_PP   : in  std_logic;
+    iRST_PP   : in  std_logic;
+    iGP       : in  std_logic_vector(1 downto 0);
+    oGP       : out std_logic;
+    oTRIG     : out std_logic;
+    oBCO_CLK  : out std_logic;
+    oBCO_RST  : out std_logic;
+    oMUX_SEL  : out std_logic;        --!MUX selector: 0->LVDS, 1->FPGA 
+    oI2C_SDA  : out std_logic;
+    oI2C_SCL  : out std_logic
     );
 end entity top_triggerBoard;
 
@@ -82,14 +83,14 @@ architecture std of top_triggerBoard is
   signal sTrgLemo : std_logic;
   signal sTrgPp   : std_logic;
   signal sRstPp   : std_logic;
-  signal sBusyPp  : std_logic_vector(iSE_BUSY'length downto 0);
-  signal sGp      : std_logic_vector(1 downto 0);
+  signal sBusyPp  : std_logic_vector(iSE_BUSY'length-1 downto 0);
+  signal sGp      : std_logic_vector(iGP'length-1 downto 0);
 
 begin
   sClk <= FPGA_CLK1_50;
 
-  sBcoClkCntEn  <= sSw(0);
-  sBcoClkCntRst <= sKeys(0);
+  sBcoClkEn  <= sSw(0);
+  sBcoClkRst <= sKeys(0);
   --!@brief Clock divider to generate 1 MHz BCO clock
   BCO_CLK_DIV : clock_divider
     generic map(
@@ -99,13 +100,14 @@ begin
       iCLK        => sClk,
       iRST        => sBcoClkRst,
       iEN         => sBcoClkEn,
-      iFREQ_DIV   => x"00000032",
-      iDUTY_CYCLE => x"00000019",
+      iFREQ_DIV   => x"0032",
+      iDUTY_CYCLE => x"0019",
       oCLK_OUT    => sBcoClk
       );
 
 
   --- I/O synchronization and buffering ----------------------------------------
+  LED      <= (others => '0');
   GPIO_0   <= (others => '0');
   oGND     <= (others => '0');
   oBCO_RST <= '0';
@@ -115,14 +117,16 @@ begin
 
   FFD_PROC : process(sClk)
   begin
-    oBCO_CLK <= sBcoClk;
-    ioGP(2)  <= sBcoClk;
-    oTRIG    <= sTrgLemo;
+    if (rising_edge(sClk)) then
+      oBCO_CLK <= sBcoClk;
+      oGP(2)   <= sBcoClk;
+      oTRIG    <= sTrgLemo;
+    end if;
   end process;
 
   CLK_PP_SYNCH : sync_edge
     generic map (
-      pSTAGES => 2
+      pSTAGES => 3
       )
     port map (
       iCLK => sClk,
@@ -133,7 +137,7 @@ begin
 
   TRG_LEMO_SYNCH : sync_edge
     generic map (
-      pSTAGES => 2
+      pSTAGES => 3
       )
     port map (
       iCLK => sClk,
@@ -144,7 +148,7 @@ begin
 
   TRG_PP_SYNCH : sync_edge
     generic map (
-      pSTAGES => 2
+      pSTAGES => 3
       )
     port map (
       iCLK => sClk,
@@ -155,7 +159,7 @@ begin
 
   RST_PP_SYNCH : sync_edge
     generic map (
-      pSTAGES => 2
+      pSTAGES => 3
       )
     port map (
       iCLK => sClk,
@@ -164,10 +168,10 @@ begin
       oQ   => sRstPp
       );
 
-  BUSY_SYNCH_GEN : for I in 0 to iSE_BUSY'length generate
+  BUSY_SYNCH_GEN : for I in 0 to iSE_BUSY'length-1 generate
     BUSY_PP_SYNCH : sync_edge
       generic map (
-        pSTAGES => 2
+        pSTAGES => 3
         )
       port map (
         iCLK => sClk,
@@ -177,22 +181,22 @@ begin
         );
   end generate BUSY_SYNCH_GEN;
 
-  GP_SYNCH_GEN : for M in 0 to sGp'length generate
+  GP_SYNCH_GEN : for M in 0 to sGp'length-1 generate
     GP_SYNCH : sync_edge
       generic map (
-        pSTAGES => 2
+        pSTAGES => 3
         )
       port map (
         iCLK => sClk,
         iRST => '0',
-        iD   => ioGP(M),
+        iD   => iGP(M),
         oQ   => sGp(M)
         );
   end generate GP_SYNCH_GEN;
 
   sKeys <= not sKeys_n;
   --!@brief Debounce logic to clean out glitches within 1ms
-  debounce_inst : debounce
+  KEY_DEBOUNCE : debounce
     generic map(
       WIDTH         => 2,
       POLARITY      => "LOW",
@@ -200,14 +204,14 @@ begin
       TIMEOUT_WIDTH => 16               -- ceil(log2(TIMEOUT))
       )
     port map (
-      clk      => fpga_clk_50,
+      clk      => sClk,
       reset_n  => '1',
       data_in  => KEY,
       data_out => sKeys_n
       );
 
   --!@brief Debounce logic to clean out glitches within 1ms
-  debounce_inst : debounce
+  SW_DEBOUNCE : debounce
     generic map(
       WIDTH         => 4,
       POLARITY      => "HIGH",
@@ -215,7 +219,7 @@ begin
       TIMEOUT_WIDTH => 16               -- ceil(log2(TIMEOUT))
       )
     port map (
-      clk      => fpga_clk_50,
+      clk      => sClk,
       reset_n  => '1',
       data_in  => SW,
       data_out => sSw

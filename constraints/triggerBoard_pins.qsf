@@ -118,11 +118,11 @@ set_location_assignment PIN_AF22 -to iSE_BUSY[4]
 set_location_assignment PIN_AE22 -to oGND[6]
 set_location_assignment PIN_AG20 -to iSE_BUSY[5]
 set_location_assignment PIN_AF21 -to oGND[7]
-set_location_assignment PIN_AG19 -to ioGP[0]
+set_location_assignment PIN_AG19 -to iGP[0]
 set_location_assignment PIN_AH19 -to oGND[8]
-set_location_assignment PIN_AG18 -to ioGP[1]
+set_location_assignment PIN_AG18 -to iGP[1]
 set_location_assignment PIN_AH18 -to iGND[5]
-set_location_assignment PIN_AF18 -to ioGP[2]
+set_location_assignment PIN_AF18 -to oGP
 set_location_assignment PIN_AF20 -to oGND[9]
 set_location_assignment PIN_AG15 -to iTRG_LEMO
 set_location_assignment PIN_AE20 -to iGND[6]
@@ -155,17 +155,53 @@ set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to iSE_BUSY[4]
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to oGND[6]
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to iSE_BUSY[5]
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to oGND[7]
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to ioGP[0]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to iGP[0]
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to oGND[8]
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to ioGP[1]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to iGP[1]
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to iGND[5]
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to ioGP[2]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to oGP
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to oGND[9]
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to iTRG_LEMO
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to iGND[6]
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to iTRG_PP
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to iRST_PP
 
+set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to oBCO_CLK
+set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to oTRIG
+set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to oBCO_RST
+set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to oMUX_SEL
+set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to oI2C_SDA
+set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to oI2C_SCL
+set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to oGP
+set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to oGND[0]
+set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to oGND[1]
+set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to oGND[2]
+set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to oGND[3]
+set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to oGND[4]
+set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to oGND[5]
+set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to oGND[6]
+set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to oGND[7]
+set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to oGND[8]
+
+set_instance_assignment -name FAST_INPUT_REGISTER ON -to iCLK_PP
+set_instance_assignment -name FAST_INPUT_REGISTER ON -to iSE_BUSY[0]
+set_instance_assignment -name FAST_INPUT_REGISTER ON -to iSE_BUSY[1]
+set_instance_assignment -name FAST_INPUT_REGISTER ON -to iSE_BUSY[2]
+set_instance_assignment -name FAST_INPUT_REGISTER ON -to iSE_BUSY[3]
+set_instance_assignment -name FAST_INPUT_REGISTER ON -to iSE_BUSY[4]
+set_instance_assignment -name FAST_INPUT_REGISTER ON -to iSE_BUSY[5]
+set_instance_assignment -name FAST_INPUT_REGISTER ON -to iGP[0]
+set_instance_assignment -name FAST_INPUT_REGISTER ON -to iGP[1]
+set_instance_assignment -name FAST_INPUT_REGISTER ON -to iTRG_LEMO
+set_instance_assignment -name FAST_INPUT_REGISTER ON -to iTRG_PP
+set_instance_assignment -name FAST_INPUT_REGISTER ON -to iRST_PP
+set_instance_assignment -name FAST_INPUT_REGISTER ON -to iGND[0]
+set_instance_assignment -name FAST_INPUT_REGISTER ON -to iGND[1]
+set_instance_assignment -name FAST_INPUT_REGISTER ON -to iGND[2]
+set_instance_assignment -name FAST_INPUT_REGISTER ON -to iGND[3]
+set_instance_assignment -name FAST_INPUT_REGISTER ON -to iGND[4]
+set_instance_assignment -name FAST_INPUT_REGISTER ON -to iGND[5]
+set_instance_assignment -name FAST_INPUT_REGISTER ON -to iGND[6]
 
 #===============================================================================
 # KEY
