@@ -1,14 +1,11 @@
 #Top file: Hog searches for the top file with name format top_<project>.vhd
-logic/top_triggerBoard.vhd
+logic/top_triggerBoard.vhd 08
 
 #Packages
 logic/intel_package.vhd
-logic/paperoPackage.vhd 08
 logic/msdintf/basic_functions/basic_package.vhd
 
 #Project-specific files
-
-#Basic functions_md
 
 #Qsys IPs: regenerate the IP for each new build
 #Add the qip if you want to generate it only once
