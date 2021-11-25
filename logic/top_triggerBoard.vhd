@@ -107,7 +107,9 @@ begin
 
 
   --- I/O synchronization and buffering ----------------------------------------
-  LED      <= (others => '0');
+  LED(7 downto 6) <= "00";
+  LED(5 downto 0) <= sBusyPp;
+
   GPIO_0   <= (others => '0');
   oGND     <= (others => '0');
   oBCO_RST <= '0';
@@ -119,7 +121,7 @@ begin
   begin
     if (rising_edge(sClk)) then
       oBCO_CLK <= sBcoClk;
-      oGP(2)   <= sBcoClk;
+      oGP      <= sBcoClk;
       oTRIG    <= sTrgLemo;
     end if;
   end process;
